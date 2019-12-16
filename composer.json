@@ -1,0 +1,28 @@
+{
+    "name": "qing358/veranda",
+    "description": "laravel frame framework",
+    "keywords": ["framework", "laravel"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "zhangqing",
+            "email": "490702087@qq.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Veranda\\": "veranda/src/"
+        },
+        "classmap": [
+        ],
+        "files": [
+            "src/ver.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    }
+}
