@@ -36,7 +36,7 @@ use Illuminate\Queue\{
 };
 //use Auth;
 //use Log;
-//use Validator;
+use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Support\{
     ServiceProvider
@@ -57,8 +57,18 @@ class AppServiceProvider extends ServiceProvider
     }
 
     protected function registerResolving(): void {
-        $this->app->resolving(Request::class, function ($request, $app) {
-            $request->confirm();
+        $this->app->resolving(\Veranda\Interaop\Request::class, function ($request, $app)
+        {
+            $raw = $app->get(LaravelRequest::class);
+            $request->assign($raw->toArray());
+            $request->setRaw($raw);
+            $request(function($request) {
+                $validator = Validator::make($request,
+                    ...static::validate()['laravel'] ?? []);
+                if ($validator->fails()) {
+                    throw new \InvalidArgumentException($validator->errors()->first());
+                }
+            });
         });
     }
 }

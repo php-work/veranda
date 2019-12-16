@@ -1,8 +1,11 @@
 <?php
 namespace ver;
 
+use Veranda;
 use Veranda\Abort;
 use Veranda\Protocol;
+
+const UNIT = ':unit';
 
 function debug(): bool
 {
@@ -53,3 +56,38 @@ function raise($error, array $extra = [], \Throwable $previous = null): Abort
 
     return $abort;
 }
+
+function flex(...$arguments): Veranda\Flex {
+    return new Veranda\Flex(...$arguments);
+}
+
+function context(...$arguments): Veranda\Context {
+    return new Veranda\Context(...$arguments);
+}
+
+function _($primary): Veranda\Pipe {
+    return new Veranda\Pipe($primary, new Veranda\Utils());
+}
+
+function head(iterable $data, $noTail = false): array {
+    if ($noTail) {
+        $head = $data[0] ?? null;
+        $tail = null;
+    } else {
+        $head = array_shift($data);
+        $tail = $data;
+    }
+    return [$head, $tail];
+}
+
+function tail(iterable $data, $noHead = true): array {
+    if ($noHead) {
+        $tail = $data[count($data) - 1] ?? null;
+        $head = null;
+    } else {
+        $tail = array_pop($data);
+        $head = $data;
+    }
+    return [$tail, $head];
+}
+
