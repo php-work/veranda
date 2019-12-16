@@ -1,7 +1,7 @@
 {
     "name": "qing358/veranda",
     "description": "laravel frame framework",
-    "keywords": ["framework", "laravel"],
+    "keywords": ["framework", "laravel", "qing358"],
     "license": "MIT",
     "authors": [
         {
@@ -12,7 +12,7 @@
     "require": {},
     "autoload": {
         "psr-4": {
-            "Veranda\\": "veranda/src/"
+            "Veranda\\": "src/"
         },
         "classmap": [
         ],
@@ -23,6 +23,13 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Veranda\\Providers\\AppServiceProvider"
+            ]
         }
     }
 }
