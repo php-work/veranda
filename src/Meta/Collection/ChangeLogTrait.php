@@ -9,69 +9,87 @@ use Veranda\Contracts;
  *
  * @author andares
  */
-trait ChangeLogTrait {
+trait ChangeLogTrait
+{
     protected $_originalData = [];
     protected $_isAllChanged = false;
 
-    public function set($key, $value): Contracts\Meta {
+    public function set($key, $value): Contracts\Meta
+    {
         if (!$this->_isAllChanged && !array_key_exists($key, $this->_originalData)) {
             $this->_originalData[$key] = $this->get($key);
         }
+
         return parent::set($key, $value);
     }
 
-    public function remove($key): Contracts\Meta {
-        if (!$this->_isAllChanged) {
-            if (array_key_exists($key, $this->_originalData)) {
+    public function remove($key): Contracts\Meta
+    {
+        if (!$this->_isAllChanged)
+        {
+            if (array_key_exists($key, $this->_originalData))
+            {
                 unset($this->_originalData[$key]);
             } else {
                 $this->_originalData[$key] = $this->get($key);
             }
         }
+
         return parent::remove($key);
     }
 
-    public function clear(): Contracts\Meta {
+    public function clear(): Contracts\Meta
+    {
         $this->releaseOriginalData();
         $this->_isAllChanged = true;
+
         return parent::clear();
     }
 
-    public function push($value): Contracts\Meta {
+    public function push($value): Contracts\Meta
+    {
         $this->releaseOriginalData();
         $this->_isAllChanged = true;
+
         return parent::push($value);
     }
 
-    public function getChanges(): array {
-
+    public function getChanges(): array
+    {
         // 如果数据全部为空，或者整体更新
         $data = $this->iterate()->toArray();
-        if (!$data || $this->_isAllChanged) {
+        if (!$data || $this->_isAllChanged)
+        {
             return [null, null, $data];
         }
 
         $updated = [];
         $removed = [];
-        foreach ($this->_originalData as $key => $originalValue) {
+        foreach ($this->_originalData as $key => $originalValue)
+        {
             $newValue = $this->get($key);
-            if ($newValue == $originalValue) {
+            if ($newValue == $originalValue)
+            {
                 continue;
             }
-            if ($newValue === null) {
+            if ($newValue === null)
+            {
                 $removed[] = $key;
             } else {
                 $updated[$key] = $newValue;
             }
         }
+
         return [$updated, $removed, null];
     }
 
-    public function getOriginalData(): array {
+    public function getOriginalData(): array
+    {
         return $this->_originalData + $this->iterate()->toArray();
     }
 
-    public function releaseOriginalData(): Contracts\Meta {
+    public function releaseOriginalData(): Contracts\Meta
+    {
         $this->_originalData = [];
         $this->_isAllChanged = false;
         return $this;

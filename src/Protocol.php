@@ -1,35 +1,37 @@
 <?php
 namespace Veranda;
 
+use Veranda\Contracts;
+
 class Protocol implements Contracts\Protocol
 {
-    public function response(): Protocol\Response {
-        return new Protocol\Response();
-    }
-
-    public function ok(...$arguments) {
-        $response = $this->response();
-        $arguments && $response->extra = $arguments;
-        return $response->ok();
-    }
-
-    public function abort(Abort $abort,
-                          ?Protocol\Response $response = null): Protocol\Response
+    public function send($em, int $ec)
     {
-
-        !$response && $response = new Protocol\Response();
-
-        $name = $abort->noticeOnly ? 'notice' : 'error';
-        return $response->addContract($name, $this->makeAbort($abort));
+        return response()->json([
+            'ec' => $ec,
+            'em' => $em,
+        ]);
     }
 
-    public function makeAbort(Abort $abort): array {
-        return [
-            'message'   => $abort->getMessage(),
-            'code'      => $abort->getCode(),
-            'extra'     => $abort->extra()['_show'] ?? (new class{}),
-            'hidden'    => $abort->extra()['_hidden'] ?? false,
-            '$jump'     => $abort->extra()['_jump'] ?? [],
-        ];
+    public function success()
+    {
+        return $this->send('', 200);
+    }
+
+    public function fail($em = '')
+    {
+        return $this->send($em, 201);
+    }
+
+    public function result($em = '')
+    {
+        return $this->send($em, 200);
+    }
+
+    public function image(string $data, string $format = 'png')
+    {
+        return response($data, 200, [
+            'content-type'  => "image/$format",
+        ]);
     }
 }

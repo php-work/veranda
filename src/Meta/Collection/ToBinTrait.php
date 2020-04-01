@@ -6,12 +6,14 @@ namespace Veranda\Meta\Collection;
  *
  * @author andares
  */
-trait ToBinTrait {
+trait ToBinTrait
+{
     /**
      *
      * @return string
      */
-    public function toBin(): string {
+    public function toBin(): string
+    {
         return msgpack_pack($this->toArray());
     }
 }

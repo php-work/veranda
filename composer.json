@@ -1,7 +1,7 @@
 {
     "name": "qing358/veranda",
-    "description": "laravel frame framework",
-    "keywords": ["framework", "laravel", "qing358"],
+    "description": "laravel framework",
+    "keywords": ["framework", "laravel"],
     "license": "MIT",
     "authors": [
         {
@@ -22,7 +22,7 @@
         "classmap": [
         ],
         "files": [
-            "src/ver.php"
+            "src/ver/ver.php"
         ]
     },
     "autoload-dev": {

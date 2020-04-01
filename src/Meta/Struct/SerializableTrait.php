@@ -9,7 +9,8 @@ use Veranda\Contracts;
  *
  * @author andares
  */
-trait SerializableTrait {
+trait SerializableTrait
+{
     /**
      * 待扩展的解包后复苏方法
      */
@@ -20,7 +21,8 @@ trait SerializableTrait {
      *
      * @return Core\Interfaces\Encoder
      */
-    protected static function getEncoder(): Core\Interfaces\Encoder {
+    protected static function getEncoder(): Core\Interfaces\Encoder
+    {
         return Core\Utils\Pack::getEncoder('msgpack');
     }
 
@@ -30,7 +32,8 @@ trait SerializableTrait {
      *
      * @return int|string
      */
-    protected static function version() {
+    protected static function version()
+    {
         return 1;
     }
 
@@ -41,7 +44,8 @@ trait SerializableTrait {
      * @param int|string $lastVersion
      * @return array
      */
-    protected static function renew(array $data, $lastVersion) {
+    protected static function renew(array $data, $lastVersion)
+    {
         return $data;
     }
 
@@ -50,9 +54,11 @@ trait SerializableTrait {
      * @param array $arr
      * @return Contracts\Meta
      */
-    public function fillByArray(array $arr): Contracts\Meta {
+    public function fillByArray(array $arr): Contracts\Meta
+    {
         $count  = 0;
-        foreach (static::defaults(true) as $key => $default) {
+        foreach (static::defaults(true) as $key => $default)
+        {
             isset($arr[$count]) && $this->set($key, $arr[$count]);
             $count++;
         }
@@ -63,16 +69,20 @@ trait SerializableTrait {
      * 序列化相关
      * @return string
      */
-    public function serialize(): ?string {
+    public function serialize(): ?string
+    {
         $arr['#'] = static::version();
         $count = -1;
-        foreach ($this->iterate(true) as $key => $value) {
+        foreach ($this->iterate(true) as $key => $value)
+        {
             $count++;
             // 跳过弃用
-            if (static::isKeyDeprecated($key)) {
+            if (static::isKeyDeprecated($key))
+            {
                 continue;
             }
-            if ($value instanceof \Serializable) {
+            if ($value instanceof \Serializable)
+            {
                 $arr[$count] = serialize($value);
             } else {
                 $arr[$count] = $value;
@@ -86,7 +96,8 @@ trait SerializableTrait {
      * @param string $data
      * @throws \UnexpectedValueException
      */
-    public function unserialize($data): void {
+    public function unserialize($data): void
+    {
         $arr = static::_unpack($data);
         if (!$arr) {
             throw new \UnexpectedValueException("unpack fail");
@@ -95,7 +106,8 @@ trait SerializableTrait {
         unset($arr['#']);
 
         // 触发升级勾子
-        if ($lastVersion != static::version()) {
+        if ($lastVersion != static::version())
+        {
             $arr = static::renew($arr, $lastVersion);
         }
         if (!$arr) {
@@ -103,7 +115,8 @@ trait SerializableTrait {
         }
 
         // 恢复可被反序列化的对象
-        foreach ($arr as $key => $value) {
+        foreach ($arr as $key => $value)
+        {
             if (is_string($value) && strlen($value) > 15 &&
                 preg_match('/^C:[0-9]{1,2}:"[^:"]+":[0-9]+:\{/', $value)) {
 
@@ -121,7 +134,8 @@ trait SerializableTrait {
      * @param array $value
      * @return string
      */
-    protected static function _pack(array $value): ?string {
+    protected static function _pack(array $value): ?string
+    {
         return static::getEncoder()->encode($value);
     }
 
@@ -131,9 +145,8 @@ trait SerializableTrait {
      * @param string $data
      * @return mixed
      */
-    protected static function _unpack(string $data) {
+    protected static function _unpack(string $data)
+    {
         return static::getEncoder()->decode($data);
     }
-
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Veranda\Contracts;
 
 interface Meta

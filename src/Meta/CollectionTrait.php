@@ -21,7 +21,8 @@ trait CollectionTrait
     /**
      * @return array
      */
-    public function keys(): array {
+    public function keys(): array
+    {
         return array_keys($this->items);
     }
 
@@ -31,8 +32,10 @@ trait CollectionTrait
      * @param mixed $value
      * @return Contracts\Meta
      */
-    public function set($key, $value): Contracts\Meta {
+    public function set($key, $value): Contracts\Meta
+    {
         $key === null ? $this->items[] = $value : $this->items[$key] = $value;
+
         return $this;
     }
 
@@ -42,7 +45,8 @@ trait CollectionTrait
      * @param mixed $default
      * @return mixed|null
      */
-    public function get($key, $default = null) {
+    public function get($key, $default = null)
+    {
         return $this->items[$key] ?? $default;
     }
 
@@ -52,10 +56,13 @@ trait CollectionTrait
      * @param array $items
      * @return Contracts\Meta
      */
-    public function replace($items): Contracts\Meta {
-        foreach ($items as $key => $value) {
+    public function replace(array $items): Contracts\Meta
+    {
+        foreach ($items as $key => $value)
+        {
             $this->has($key) && $this->set($key, $value);
         }
+
         return $this;
     }
 
@@ -64,8 +71,10 @@ trait CollectionTrait
      *
      * @return iterable
      */
-    public function iterate(): iterable {
-        foreach ($this->items as $key => $value) {
+    public function iterate(): iterable
+    {
+        foreach ($this->items as $key => $value)
+        {
             yield $key => $value;
         }
     }
@@ -75,7 +84,8 @@ trait CollectionTrait
      * @param int|string $key
      * @return bool
      */
-    public function has($key): bool {
+    public function has($key): bool
+    {
         return isset($this->items[$key]);
     }
 
@@ -85,8 +95,10 @@ trait CollectionTrait
      * @param int|string $key
      * @return Contracts\Meta
      */
-    public function remove($key): Contracts\Meta {
+    public function remove($key): Contracts\Meta
+    {
         unset($this->items[$key]);
+
         return $this;
     }
 
@@ -94,8 +106,10 @@ trait CollectionTrait
      *
      * @return Contracts\Meta
      */
-    public function clear(): Contracts\Meta {
+    public function clear(): Contracts\Meta
+    {
         $this->items = [];
+
         return $this;
     }
 
@@ -104,18 +118,23 @@ trait CollectionTrait
      * @return Contracts\Meta
      * @throws \UnexpectedValueException
      */
-    public function confirm(): Contracts\Meta {
+    public function confirm(): Contracts\Meta
+    {
         // confirm 内部所有meta
         $it = new Recursive\TraversableIterator($this, function($value) {
-            if (is_object($value) && $value instanceof Contracts\Meta) {
+            if (is_object($value) && $value instanceof Contracts\Meta)
+            {
                 $value->confirm();
+
                 return false;
             }
         });
 
         $methods = $this->afterConfirmOnce();
-        foreach ($it() as $key => $value) {
-            foreach ($methods as $method) {
+        foreach ($it() as $key => $value)
+        {
+            foreach ($methods as $method)
+            {
                 $call = [$this, $method];
                 $call($key, $value);
             }
@@ -123,7 +142,8 @@ trait CollectionTrait
 
         // 整体confirm勾子
         $methods = $this->afterConfirm();
-        if ($methods && is_array($methods)) foreach ($methods as $method) {
+        if ($methods && is_array($methods)) foreach ($methods as $method)
+        {
             $call = [$this, $method];
             $call();
         }
@@ -135,7 +155,8 @@ trait CollectionTrait
      *
      * @return string[]
      */
-    protected function afterConfirmOnce(): array {
+    protected function afterConfirmOnce(): array
+    {
         return [];
     }
 
@@ -144,8 +165,8 @@ trait CollectionTrait
      *
      * @return string[]|null
      */
-    protected function afterConfirm() {
+    protected function afterConfirm()
+    {
         return [];
     }
-
 }

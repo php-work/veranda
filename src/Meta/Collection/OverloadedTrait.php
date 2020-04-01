@@ -7,20 +7,25 @@ namespace Veranda\Meta\Collection;
  *
  * @author andares
  */
-trait OverloadedTrait {
-    public function __set($key, $value) {
+trait OverloadedTrait
+{
+    public function __set($key, $value)
+    {
         $this->set($key, $value);
     }
 
-    public function __get($key) {
+    public function __get($key)
+    {
         return $this->get($key);
     }
 
-    public function __isset($key) {
+    public function __isset($key)
+    {
         return $this->has($key);
     }
 
-    public function __unset($key) {
+    public function __unset($key)
+    {
         $this->remove($key);
     }
 }

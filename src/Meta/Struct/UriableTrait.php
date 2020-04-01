@@ -6,11 +6,12 @@ namespace Veranda\Meta\Struct;
  *
  * @author andares
  */
-trait UriableTrait {
-
+trait UriableTrait
+{
     abstract public static function uriPath(): string;
 
-    public function toUri(string $scheme): string {
+    public function toUri(string $scheme): string
+    {
         return "$scheme:".static::uriPath()."?".http_build_query($this->all());
     }
 }

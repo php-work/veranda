@@ -27,20 +27,25 @@ trait StructTrait
 
     protected static $_includeDeprecated = false;
 
-    public static function isDefined(string $key): bool {
+    public static function isDefined(string $key): bool
+    {
         $defaults = static::defaults();
+
         return array_key_exists($key, $defaults);
     }
 
-    protected static function _defaults(): array {
+    protected static function _defaults(): array
+    {
         return [];
     }
 
-    protected static function _nullable(): ?array {
+    protected static function _nullable(): ?array
+    {
         return [];
     }
 
-    protected static function _virtuals(): array {
+    protected static function _virtuals(): array
+    {
         return [];
     }
 
@@ -48,17 +53,22 @@ trait StructTrait
      * 获取基础数据结构
      * @return array
      */
-    public static function defaults(): array {
+    public static function defaults(): array
+    {
         static $enabled = [];
-        if (static::$_includeDeprecated) {
+        if (static::$_includeDeprecated)
+        {
             return static::_defaults();
         }
 
-        if (!$enabled) {
-            foreach (static::_defaults() as $key => $default) {
+        if (!$enabled)
+        {
+            foreach (static::_defaults() as $key => $default)
+            {
                 !static::isKeyDeprecated($key) && $enabled[$key] = $default;
             }
         }
+
         return $enabled;
     }
 
@@ -68,14 +78,17 @@ trait StructTrait
      * @param int|string $key
      * @return bool
      */
-    public static function isKeyDeprecated($key): bool {
+    public static function isKeyDeprecated($key): bool
+    {
         return isset(static::$_deprecated[$key]);
     }
 
-    public function includeDeprecated(callable $fun) {
+    public function includeDeprecated(callable $fun)
+    {
         static::$_includeDeprecated = true;
         $result = $fun($this);
         static::$_includeDeprecated = false;
+
         return $result;
     }
 
@@ -85,18 +98,22 @@ trait StructTrait
      * @param mixed $default
      * @return mixed
      */
-    public function get($key, $default = null) {
+    public function get($key, $default = null)
+    {
         $value = parent::get($key);
+
         return $value !== null ? $value
             : ((static::defaults(true)[$key]
                 ?? ($this->callVirtualProperty($key) ?: $default)));
     }
 
-    protected function callVirtualProperty(string $key) {
+    protected function callVirtualProperty(string $key)
+    {
         $virtuals = static::_virtuals();
         if (!isset($virtuals[$key])) {
             return null;
         }
+
         return $virtuals[$key]->call($this);
     }
 
@@ -105,8 +122,10 @@ trait StructTrait
      *
      * @return iterable
      */
-    public function iterate(): iterable {
-        foreach (static::defaults() as $key => $default) {
+    public function iterate(): iterable
+    {
+        foreach (static::defaults() as $key => $default)
+        {
             yield $key => $this->get($key);
         }
     }
@@ -116,13 +135,16 @@ trait StructTrait
      * @return Contracts\Meta
      * @throws \UnexpectedValueException
      */
-    public function confirm(): Contracts\Meta {
+    public function confirm(): Contracts\Meta
+    {
         $nullable = static::_nullable();
 
         // confirm勾子
-        foreach ($this->iterate() as $key => $value) {
+        foreach ($this->iterate() as $key => $value)
+        {
             $method = "_confirm_$key";
-            if (method_exists($this, $method)) {
+            if (method_exists($this, $method))
+            {
                 $value = $this->$method($value);
             } elseif ($value === null
                 && is_array($nullable)
@@ -138,5 +160,4 @@ trait StructTrait
 
         return parent::confirm();
     }
-
 }

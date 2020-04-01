@@ -1,9 +1,7 @@
 <?php
 namespace Veranda\Contracts;
 
-use Veranda\Abort;
-
 interface Protocol
 {
-    public function abort(Abort $abort);
+    public function send($em, int $ec);
 }

@@ -18,14 +18,18 @@ class ToArray
         $this->nullable = $nullable;
     }
 
-    public function __invoke(): array {
+    public function __invoke(): array
+    {
         return $this->_toArray($this->root, $this->fun);
     }
 
-    public function _toArray(iterable $traversable, callable $filter = null): array {
+    public function _toArray(iterable $traversable, callable $filter = null): array
+    {
         $result = [];
-        foreach ($traversable as $key => $value) {
-            if ($value instanceof Arrayable) {
+        foreach ($traversable as $key => $value)
+        {
+            if ($value instanceof Arrayable)
+            {
                 $value = $value->toArray();
             } elseif ($value instanceof \Traversable || is_array($value)) {
                 $value = $this->_toArray($value, $filter);
