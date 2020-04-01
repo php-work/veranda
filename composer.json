@@ -9,7 +9,12 @@
             "email": "490702087@qq.com"
         }
     ],
-    "require": {},
+    "require": {
+        "php": ">=7.2.0",
+        "ext-ftp": "*",
+        "ext-gmp": "*",
+        "ext-json": "*"
+    },
     "autoload": {
         "psr-4": {
             "Veranda\\": "src/"
