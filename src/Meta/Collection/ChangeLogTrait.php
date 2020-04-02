@@ -46,12 +46,12 @@ trait ChangeLogTrait
         return parent::clear();
     }
 
-    public function push($value): Contracts\Meta
+    public function push(...$value): Contracts\Meta
     {
         $this->releaseOriginalData();
         $this->_isAllChanged = true;
 
-        return parent::push($value);
+        return parent::push(...$value);
     }
 
     public function getChanges(): array

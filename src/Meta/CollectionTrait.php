@@ -56,8 +56,9 @@ trait CollectionTrait
      * @param array $items
      * @return Contracts\Meta
      */
-    public function replace(array $items): Contracts\Meta
+    public function replace($items): Contracts\Meta
     {
+        $items = is_string($items) ? [$items] : $items;
         foreach ($items as $key => $value)
         {
             $this->has($key) && $this->set($key, $value);
